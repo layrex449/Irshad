@@ -1,0 +1,57 @@
+.product-discount{
+    background: #f6861f !important;
+    border: 0.3rem solid #f6861f !important;
+}
+
+.product-discount-text{
+    margin:0 !important;
+    font-size:2rem !important;
+    color:white
+}
+
+/* Fix for OwlCarousel cart slider to maintain original design */
+.price-info__cart-slider {
+    overflow: hidden;
+    position: relative;
+}
+
+.price-info__cart-slider__scroller {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.price-info__cart-slider__item {
+    flex: 0 0 100% !important;
+    background: #fff !important;
+    padding: 0 2.4rem !important;
+}
+
+/* Ensure OwlCarousel doesn't override our design */
+.price-info__cart-slider .owl-stage {
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Disable original animations since we're using OwlCarousel */
+.price-info__cart-slider__scroller {
+    animation: none !important;
+    -webkit-animation: none !important;
+}
+
+.price-info__cart-slider__item:first-child {
+    animation: none !important;
+    -webkit-animation: none !important;
+}
+
+/* Maintain original item styling */
+.price-info__cart-slider__item__logo img {
+    height: 85px !important;
+}
+
+.price-info__cart-slider__item__info h4 {
+    margin: 0;    
+}
+
+.price-info__cart-slider__item__info p {
+    margin: 0;    
+}

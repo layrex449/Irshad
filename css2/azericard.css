@@ -1,0 +1,267 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* Header Card */
+.header-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 32px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-logos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.abb-logo {
+    height: 36px;
+    width: auto;
+}
+
+.azericard-logo {
+    height: 28px;
+    width: auto;
+}
+
+/* Form Card */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 24px;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #9ca3af;
+    margin-bottom: 8px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 50px 16px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #cbd5e1;
+    background: #ffffff;
+}
+
+.form-input::placeholder {
+    color: #d1d5db;
+    font-weight: 400;
+}
+
+.form-input[readonly] {
+    background: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+}
+
+.input-icon {
+    position: absolute;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.info-tooltip {
+    cursor: help;
+    pointer-events: auto;
+}
+
+/* Form Row (for expiry and CVC) */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-col .form-input {
+    padding: 16px;
+}
+
+.form-col .input-group .form-input {
+    padding-right: 50px;
+}
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    padding: 18px;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    background: #7c8fa6;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #6b7c93;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 16px;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #6b7280;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.btn-secondary:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+        background: #f9fafb;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    .header-card {
+        padding: 20px 24px;
+        margin-bottom: 12px;
+    }
+
+    .form-card {
+        padding: 24px 20px;
+    }
+
+    .form-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .abb-logo {
+        height: 32px;
+    }
+
+    .azericard-logo {
+        height: 24px;
+    }
+
+    .form-input {
+        padding: 14px 50px 14px 14px;
+        font-size: 14px;
+    }
+
+    .form-col .form-input {
+        padding: 14px;
+    }
+
+    .form-col .input-group .form-input {
+        padding-right: 50px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-card {
+    animation: fadeIn 0.3s ease;
+}
+
+.form-card {
+    animation: fadeIn 0.3s ease 0.1s backwards;
+}
+
+/* Input States */
+input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

